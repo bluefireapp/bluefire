@@ -1,0 +1,102 @@
+.rTextbox {
+    min-width: 300px;
+    background-color:#ececef;
+    position: relative;
+    display: inline-block;
+    padding:10px;
+    text-align: left;
+    margin-bottom:15px;
+
+    input{
+        width: 100%;
+        position: relative;
+        font-size: 14px;
+        font-weight: 300;
+        background-color: transparent;
+        display: inline-block;
+        border: none;
+        padding: 7px;
+        outline:none;
+        border-bottom: 1px solid @secondaryBtn;
+        .mainFont;
+        .transition(all, 300ms, ease);
+        &:focus{
+
+            .transition(all, 300ms, ease);
+            border-bottom: 2px solid @accents;
+        }
+    }
+    i{
+        position: absolute;
+        right:15px;
+        top:15px;
+    }
+    ::-webkit-input-placeholder {
+       font-weight: 300;
+       .mainFont;
+       color:@secondaryBtn;
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+       font-weight: 300;
+       .mainFont;
+       color:@secondaryBtn;
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+       font-weight: 300;
+       .mainFont;
+       color:@secondaryBtn;
+    }
+
+    :-ms-input-placeholder {
+       font-weight: 300;
+       .mainFont;
+       color:@secondaryBtn;
+    }
+
+    @media only screen and (min-width: 500px) {
+        input{
+            min-width:400px;
+        }
+    }
+}
+
+.rCheckbox{
+    position: relative;
+    display: inline-block;
+    margin-bottom:15px;
+    input{
+        outline:none;
+        height: 16px;
+        width: 16px;
+        border:1px solid @secondaryTxt;
+    }
+    a{
+        color:@generalTxt;
+        text-decoration: underline;
+    }
+    label{
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 300;
+        color: #43505e;
+        top: -3px;
+        position: relative;
+        color:@generalTxt;
+    }
+}
+
+.rMultiSelect{
+    font-size: 14px;
+    width: 300px;
+    overflow-x: scroll;
+    border: 1px solid rgba(179, 179, 179, 0.44);
+    .rounded-corners(3px);
+    min-height: 400px;
+    outline:none;
+    option{
+        margin: 5px;
+        display: block;
+    }
+}

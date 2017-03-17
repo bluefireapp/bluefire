@@ -1,0 +1,55 @@
+@platformIconSize: 40px;
+@platformIconOffset: -20px;
+@platformIconOffsetTotal: -52px;
+
+.platformIcon {
+    display: inline-block;
+    height: @platformIconSize;
+    width: @platformIconSize;
+    background-image: url("/assets/images/logos/platformIcons.svg");
+    background-size: 600px @platformIconSize;
+
+    &.platFormIconAndroid {
+        background-position: @platformIconOffset 0;
+    }
+
+    &.platFormIconJava {
+        background-position: (@platformIconOffsetTotal + @platformIconOffset) 0;
+    }
+
+    &.platFormIconIos {
+        background-position: ((2*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconCSharp {
+        background-position: ((3*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconPython {
+        background-position: ((4*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconJavascript {
+        background-position: ((5*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconHtml5 {
+        background-position: ((6*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconGeneric {
+        background-position: ((7*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconApi {
+        background-position: ((8*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconWb {
+        background-position: ((9*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+
+    &.platFormIconXdk {
+        background-position: ((10*@platformIconOffsetTotal) + @platformIconOffset) 0;
+    }
+}

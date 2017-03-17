@@ -1,0 +1,82 @@
+@testDeviceSelectMinWidth: 40px;
+@testDeviceWidgetHeight: 250px;
+@testDeviceSelectDropDownIconWidth: 15px;
+@testDeviceSelectDropDownIconHorizontalPadding: 3px;
+
+@testDeviceWidgetContainerSpace: 10px;
+@testDeviceWidgetContainerMargin: 20px;
+
+@testDeviceLogsHeight: 200px;
+
+.testDevice {
+    article.modalContent{
+        h4 {
+            font-size: @font-size-1;
+            margin-bottom:5px;
+        }
+
+        .deviceLogs {
+            background-color: white;
+            height: @testDeviceLogsHeight;
+            margin-bottom: @testDeviceWidgetContainerSpace;
+            overflow-y: auto;
+        }
+    }
+
+    .widgetSelector {
+        position: relative;
+        display: inline-block;
+        margin-bottom: @testDeviceWidgetContainerMargin;
+
+        .dropDownIcon {
+		    position: absolute;
+            width: @testDeviceSelectDropDownIconWidth;
+		    right: 0px;
+		    padding: 7px @testDeviceSelectDropDownIconHorizontalPadding;
+            background-color: @white-3;
+		    color: @blue-1;
+		    pointer-events: none;
+		}
+
+        select {
+            display: inline-block;
+            min-width: @testDeviceSelectMinWidth;
+            padding-right: @testDeviceSelectDropDownIconWidth + 2*@testDeviceSelectDropDownIconHorizontalPadding;
+            border-radius: 0;
+            border: none;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            background-color: @white-3;
+            vertical-align: middle;
+            -webkit-appearance: none;
+        }
+    }
+
+
+    .userActionContainer {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .errorMessageContainer {
+        background: red;
+        color: white;
+        padding: @testDeviceWidgetContainerSpace;
+    }
+
+    .userActionContainer, .errorMessageContainer {
+        margin-bottom: @testDeviceWidgetContainerSpace;
+    }
+
+    .widgetContainer {
+        flex-grow: 1;
+        background-color: white;
+        height: @testDeviceWidgetHeight;
+        padding: @testDeviceWidgetContainerSpace;
+        overflow-y: auto;
+    }
+
+    .widgetContainer:not(.ng-hide) + .widgetContainer:not(.ng-hide) {
+        margin-left: @testDeviceWidgetContainerSpace;
+    }
+}

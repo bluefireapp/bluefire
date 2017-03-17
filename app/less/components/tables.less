@@ -1,0 +1,201 @@
+.rTable{
+    &.rTableLoading{
+      table{
+        opacity: 0;
+      }
+      overflow: hidden;
+      height: 100px;
+      overflow-y: hidden;
+      display: block;
+      &:after{
+        position: absolute;
+        content: "\f1ce";
+        font-family: 'FontAwesome';
+        top: 120px;
+        margin: 0px auto;
+        width: 100px;
+        animation: fa-spin 2s infinite linear;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        font-size: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        .transition(all, 300ms, ease);
+      }
+    }
+
+    &.lessBorders{
+      border:none;
+      padding-top: 54px;
+      th{
+        border:none;
+        max-width: 200px;
+        min-width: 200px;
+        word-wrap: break-word;
+        &:first-of-type{
+          border-right:1px solid #e4e2e2;
+          z-index: 2;
+          &:after{
+            content: '';
+            position: absolute;
+            top:0px;
+            background: #eee;
+            width: 10px;
+            height: 100%;
+            right:-1px;
+          }
+          &:before{
+            content: '';
+            position: absolute;
+            background: #e4e2e2;
+            width: 100%;
+            height: 1px;
+            top: 54px;
+            left: 0px;
+          }
+        }
+      }
+      td{
+        background: white;
+        &:first-of-type{
+          border-right: 1px solid #e4e2e2;
+          border-bottom: 1px solid #e4e2e2;
+          position: relative;
+          top: 54px;
+          height: 52px;
+          left:0px;
+        }
+      }
+      .scrolling{
+        box-shadow: 5px 0px 12px -9px #000000;
+      }
+      tr{
+        &:not(:first-of-type) {
+          max-width: 200px;
+          min-width: 200px;
+        }
+        &:first-of-type{
+          width: auto;
+          position: absolute;
+        }
+      }
+    }
+
+    table{
+        width: 100%;
+    }
+    table {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-collapse: collapse;
+        border: 1px solid #e4e2e2;
+        background: #fff;
+        position: relative;
+        display: block;
+    }
+    th {
+        background: #eee;
+        height: 54px;
+        width: 25%;
+        min-width: 200px;
+        font-size: 12px;
+        padding:10px;
+        text-align: center;
+        font-weight: 400;
+        color: #797b83;
+        border: 1px solid #e4e2e2;
+        &:first-of-type{
+          text-transform: capitalize;
+          min-width: 114px;
+          position: relative;
+        }
+        h5{
+          font-size:12px;
+          font-weight: normal;
+        }
+    }
+    tr {
+        border-bottom: 1px solid #e4e2e2;
+    }
+    tr.hoverable{
+      &:hover{
+        background-color:#eeeeee;
+        cursor: pointer;
+      }
+    }
+
+    tr:last-child {
+        border-bottom: 0px;
+    }
+    td {
+        //border-right: 1px solid #e4e2e2;
+        padding: 10px;
+        font-size: 11px;
+        text-align: center;
+        font-weight: 300;
+        min-width: 200px;
+        //transition: all 0.2s;
+        &:first-of-type{
+          width: 115px;
+          min-width: 116px;
+          max-width: 116px;
+          display: inline-block;
+        }
+    }
+    td:last-child {
+        border-right: 0px;
+    }
+    td.selected {
+        background: #d7e4ef;
+        z-index: ;
+    }
+    td input {
+        font-size: 14px;
+        background: none;
+        outline: none;
+        border: 0;
+        display: table-cell;
+        height: 100%;
+        width: 100%;
+    }
+    td input:focus {
+        box-shadow: 0 1px 0 steelblue;
+        color: steelblue;
+    }
+}
+
+.rTableGray{
+  th{
+    background-color: #eeeeee;
+    box-shadow:none;
+    border:none;
+    text-shadow: none;
+    color:gray;
+  }
+  tr{
+    border-bottom: 1px solid #eee;
+  }
+  td{
+    border-right: none;
+  }
+}
+
+.noBorder{
+  border-bottom: none !important;
+}
+
+.rTableRowWidthSmall{
+    max-width: 100px;
+    width: auto;
+}
+
+.rTableRowWidthMedium{
+    max-width: 40px;
+}
+
+.rTableRowWidthLarge{
+    max-width: 40px;
+}

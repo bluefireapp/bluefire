@@ -1,0 +1,45 @@
+/*GRID*/
+ .gridRow {
+    margin-left: auto;
+    margin-right: auto;
+    &:before,
+    &:after {
+        content: ' ';
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+.gridColumns {
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+    &:last-child {
+        float: right;
+    }
+    &.gridEnd{
+        float: left;
+    }
+}
+.generateColumns(12);
+.generateColumns(@n, @i: 1) when (@i =< @n) {
+    .gridBlock@{i} {
+        width: (@i * 100% / @n);
+    }
+    .generateColumns(@n, (@i + 1));
+}
+
+.generateOffset(12);
+.generateOffset(@n, @i: 1) when (@i =< @n) {
+    .gridOffset@{i} {
+        margin-left: (@i * 100% / @n);
+    }
+    .generateOffset(@n, (@i + 1));
+}
+
+.gridSpaced {
+    margin-right: 3px;
+}
+
+/*END GRID*/

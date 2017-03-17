@@ -1,0 +1,30 @@
+@testTroubleshootListItemMargin: 15px;
+.testTroubleshootDevice {
+    .bold {
+        font-weight: bold;
+    }
+
+    .checkList {
+        li::before {
+            font-size: @font-size-5;
+            margin-right: @testTroubleshootListItemMargin;
+        }
+    }
+
+    .checkListItem {
+        display: flex;
+
+        &::before {
+            content: "\f00c";
+        }
+
+        .checkListItemContainer {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        a {
+            color: @blue-1;
+        }
+    }
+}
