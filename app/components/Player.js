@@ -37,6 +37,9 @@ export default class Player extends Component {
       player.addEventListener('timeupdate', (e)=> {
         this.videoTimeUpdating(e);
       }, false);
+      player.addEventListener('progress', (e) =>{
+        this.videoProgress(e);
+      });
   }
   componentDidUpdate () {
     let { src, videoPlaying, videoState, time } = this.props;
@@ -83,6 +86,23 @@ export default class Player extends Component {
       }
   }
 
+  videoProgress(e){
+    var range = 0;
+    var bf = e.target.buffered;
+    var time = e.target.currentTime;
+
+    while(!(bf.start(range) <= time && time <= bf.end(range))) {
+      range += 1;
+    }
+    var loadStartPercentage = bf.start(range) / e.target.duration;
+    var loadEndPercentage = bf.end(range) / e.target.duration;
+    var loadPercentage = loadEndPercentage - loadStartPercentage;
+    this.videoLoadedPerc = loadEndPercentage;
+    console.log("======buffered", loadEndPercentage);
+    this.props.heartBeat({"time": e.target.currentTime, "loaded": this.videoLoadedPerc});
+
+  }
+
   setVolume(e) {
     let value = e.target.value;
     this.playerControls().volume(value / 100);
@@ -118,7 +138,7 @@ export default class Player extends Component {
     document.querySelector(".timeTrack").value = e.target.currentTime;
     document.querySelector(".metaTime > p > b").innerHTML = this.props.cleanTime(e.target.currentTime);
     document.querySelector(".metaTime > p > span").innerHTML = this.props.cleanTime(e.target.duration);
-    this.props.heartBeat({"time": e.target.currentTime});
+    this.props.heartBeat({"time": e.target.currentTime, "loaded": this.videoLoadedPerc});
     this.adjustGlow(e.target.duration);
   }
 

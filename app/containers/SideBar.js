@@ -29,22 +29,24 @@ class SideBarContainer extends Component{
 		return (
 			<div className='wrapNode'>
         <aside className={videoPlaying ? 'sideBar is-hiding' : 'sideBar'}>
-          <h3>Currently Online</h3>
+          <h3>{ sessionUsers ? 'Current Session': 'Current Online'}</h3>
 					{ sessionUsers ?
 					<ul className='scrollBar'>
             {
               sessionUsers.map((user, i) => {
-                return <li key={i}>
-                  <div className='rngColor' style={this.makeColor(user)}></div>
+                return <li className='inLobby' key={i}>
+                  <div className='rngColor inSession' style={this.makeColor(user)}></div>
                   <h5>{user.username}</h5>
-                  <h6>{user.heartBeat? cleanTime(user.heartBeat.data.time) : null}</h6>
+                  <h6>{user.heartBeat ? cleanTime(user.heartBeat.data.time) : null}
+										{user.heartBeat && user.heartBeat.data.loaded? <p><i className='fa fa-cloud-download'></i>{Math.floor(user.heartBeat.data.loaded * 100)}%</p>  : null}
+										{user.ping? <p><i className='fa fa-signal'></i>{user.ping} ms</p>  : null}</h6>
                 </li>
               })
             }
-						<p className='lobby'>Lobby</p>
           </ul>
 					:null}
-          <ul className='scrollBar'>
+					{sessionUsers ? <h3 className='lobby'>Lobby</h3>: null }
+          <ul className={sessionUsers ? 'scrollBar inSession': 'scrollBar'}>
             {
               users.map((user, i) => {
                 return <li key={i}>

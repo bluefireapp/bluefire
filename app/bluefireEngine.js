@@ -3,13 +3,13 @@ class bluefireEngine{
   constructor(){
     const WebSocket = require('ws');
     let users = [
-      {id: 123, username:'Zaku'},
-      {id: 123, username:'KLS Youri'},
-      {id: 123, username:'Sanjin'},
-      {id: 123, username:'GomAzuzu'},
-      {id: 123, username:'PlasterBlaster'},
-      {id: 123, username:'Takara'},
-      {id: 123, username:'Renalis'}
+    {id: 123, username:'Zaku'},
+    {id: 123, username:'KLS Youri'},
+    {id: 123, username:'Sanjin'},
+    {id: 123, username:'GomAzuzu'},
+    {id: 123, username:'PlasterBlaster'},
+    {id: 123, username:'Takara'},
+    {id: 123, username:'Renalis'}
     ];
     this.sessions = {
 
@@ -31,6 +31,18 @@ class bluefireEngine{
 
     wss.on('connection',(ws)=> {
       this.currentUsers();
+
+      ws.on('close',()=> {
+        this.users = this.users.filter(user =>{
+          return user.username !== ws.user.username;
+        });
+        this.removeUserFromAllSessions(ws.user);
+        this.currentUsersInSession(ws, ws.sessionId);
+        delete ws.user;
+
+        console.log('closed for user', ws.user)
+      });
+
       ws.on('message', (data) => {
         // Broadcast to everyone else.
         data = JSON.parse(data)
@@ -58,7 +70,13 @@ class bluefireEngine{
             break;
           case 'LOGIN':
             ws.user = data.user;
-            this.users.push(ws.user);
+            let userFound = this.users.filter((v) => {
+              return v.username === data.user.username; // Filter out the appropriate one
+            })[0];
+            if (!userFound){
+              console.log('USER FOUND')
+              this.users.push(ws.user);
+            }
             this.currentUsers();
             break;
           case 'ACCEPTED_SESSION':
@@ -87,6 +105,10 @@ class bluefireEngine{
             break;
           case 'MESSAGE':
             this.sendMessageToSession(ws.currentSession, data, ws);
+            break;
+          case 'PING':
+            ws.user.ping = data.lastPing
+            this.sendToUser(ws.user, "PONG", {});
             break;
 
           default:
@@ -156,6 +178,15 @@ class bluefireEngine{
       if (!userExists){
         this.sessions[sessionId].users.push(user);
       }
+    }
+  }
+
+  removeUserFromAllSessions(user){
+    for (var sessionId in this.sessions) {
+        let usersInSession = this.sessions[sessionId].users;
+        this.sessions[sessionId].users = usersInSession.filter((u)=>{
+          return u.username !== user.username;
+        });
     }
   }
 

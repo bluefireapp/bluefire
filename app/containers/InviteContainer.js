@@ -27,7 +27,7 @@ class InviteContainer extends Component{
 		localStorage.setItem('currentUser', JSON.stringify({username: e.target.value}));
 	}
 	userLogin(user){
-		this.props.bluefireEngine({username:this.state.user});
+		this.props.bluefireEngine({username:this.state.username});
 		this.setState({hasUser: true});
 		this.forceUpdate();
 	}

@@ -783,6 +783,9 @@ input {
   padding-bottom: 15px;
   border-bottom: 1px solid #4488ff;
 }
+.sideBar h3.lobby {
+  margin-top: 0px;
+}
 .sideBar p.lobby {
   color: #4488ff;
   font-weight: 100;
@@ -792,10 +795,13 @@ input {
   border-bottom: 1px solid #4488ff;
 }
 .sideBar ul {
+  list-style-type: none;
   margin: 0px;
   padding: 0px;
   overflow-y: auto;
   width: 100%;
+  -webkit-transition: all 300ms ease;
+  transition: all 300ms ease;
 }
 .sideBar ul li {
   padding: 10px;
@@ -829,6 +835,35 @@ input {
   margin-left: 37px;
   font-weight: 100;
   color: #1d5982;
+}
+.sideBar ul li h6 p {
+  display: inline-block;
+  margin-left: 5px;
+}
+.sideBar ul li h6 p i {
+  margin-right: 3px;
+}
+.sideBar ul li.inLobby h5 {
+  margin-top: 0px;
+}
+.sideBar ul li.inLobby h6 {
+  margin-top: -22px;
+}
+.sideBar ul.inSession {
+  -webkit-transition: all 300ms ease;
+  transition: all 300ms ease;
+}
+.sideBar ul.inSession li {
+  font-size: 10px;
+}
+.sideBar ul.inSession li .rngColor {
+  height: 15px;
+  width: 15px;
+}
+.sideBar ul.inSession li h5 {
+  font-size: 10px;
+  margin: 1px;
+  margin-left: 6px;
 }
 button {
   padding: 10px;

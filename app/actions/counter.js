@@ -88,74 +88,107 @@ export function videoState(state) {
   };
 }
 
+let ping = {
+  time: new Date().getTime(),
+  endTime: new Date().getTime(),
+  lastPing: 0,
+  runner: 0,
+  start: function(connection, ctx){
+    ctx.runner = window.setTimeout(()=>{
+      connection.send(JSON.stringify({topic:'PING' , lastPing: ctx.lastPing})); // Send the message 'Ping' to the server
+      ctx.time = new Date().getTime();
+    }, 10000)
+  },
+  setEnd: (ctx)=>{
+    ctx.endTime = new Date().getTime();
+    ctx.lastPing = (ctx.endTime - ctx.time);
+    return ctx.lastPing;
+  },
+  clear: (ctx)=>{
+    window.clearTimeout(ctx.runner);
+  }
+};
+
 export function bluefireEngine(currentUser) {
   return (dispatch: () => void, getState: () => counterStateType) => {
+    newConnection();
+    function newConnection(){
+      connection = new WebSocket('ws://localhost:8003');
+        // When the connection is open, send some data to the server
+      connection.onopen = function () {
+        ping.clear(ping);
+        ping.start(connection, ping);
+        dispatch({"type": "CONNECTED"});
+        connection.send(JSON.stringify({topic:'LOGIN', user: currentUser})); // Send the message 'Ping' to the server
+        let savedSession = localStorage.getItem('session');
+        if (localStorage.getItem('session')){
+          let invite = {sessionId: JSON.parse(localStorage.getItem('session')).id}
+            connection.send(JSON.stringify({topic:'ACCEPTED_SESSION', data: invite}));
+           dispatch({"type": "JOINED_SESSION"});
+           dispatch({'type': 'NEW_SESSION',id: invite.sessionId});
+        }
+      };
 
-    connection = new WebSocket('ws://localhost:8003');
-    // When the connection is open, send some data to the server
-    connection.onopen = function () {
-      dispatch({"type": "CONNECTED"});
-      connection.send(JSON.stringify({topic:'LOGIN', user: currentUser})); // Send the message 'Ping' to the server
-      let savedSession = localStorage.getItem('session');
-      if (localStorage.getItem('session')){
-        let invite = {sessionId: JSON.parse(localStorage.getItem('session')).id}
-          connection.send(JSON.stringify({topic:'ACCEPTED_SESSION', data: invite}));
-         dispatch({"type": "JOINED_SESSION"});
-         dispatch({'type': 'NEW_SESSION',id: invite.sessionId});
-      }
-    };
 
-    // Log errors
-    connection.onerror = function (error) {
-      console.log('WebSocket Error ' + error);
-    };
+      connection.onclose = function (error) {
+        console.log('WebSocket Error ' + error);
+        setTimeout(()=>{
+            newConnection();
+        }, 5000);
+      };
 
-    // Log messages from the server
-    connection.onmessage = function (e) {
-      console.log('Server: ' + e.data);
-      let message = JSON.parse(e.data);
-      switch(message.topic){
-        case 'users':
-          message.data.forEach((user)=>{
-            dispatch(newUser(user));
-          });
-          break;
-        case 'SESSION_ID':
-            dispatch({'type': 'NEW_SESSION',id: message.data.id});
+      // Log messages from the server
+      connection.onmessage = function (e) {
+        console.log('Server: ' + e.data);
+        let message = JSON.parse(e.data);
+        switch(message.topic){
+          case 'users':
+            message.data.forEach((user)=>{
+              dispatch(newUser(user));
+            });
             break;
-        case 'CURRENT_SESSION':
-            dispatch({'type': 'CURRENT_SESSION',session: message.data.session});
-            localStorage.setItem('session', JSON.stringify(message.data.session));
-            break;
-        case 'INVITE':
-          console.log('an invite is recieved', message);
-            dispatch({'type':"INVITE", 'from': message.data.from ,'sessionId': message.data.sessionId});
-            break;
-        case 'VIDEO_PLAY':
-          console.log('video', message);
-            dispatch({'type':"VIDEO_PLAY", time: message.data.time});
-            break;
-        case 'VIDEO_PAUSE':
-          console.log('video', message);
-            dispatch({'type':"VIDEO_PAUSE", time: message.data.time});
-            break;
-        case 'VIDEO_POSITION':
-          console.log('videoposition', message);
-            dispatch({'type':"VIDEO_POSITION", time: message.data.time});
-            break;
-        case 'VIDEO_CHANGE':
-          console.log('videoChange', message);
-            dispatch({'type':"VIDEO_CHANGE", src: message.data.src});
-            break;
-        case 'HEARTBEAT':
-          console.log('heartbeat arived', message);
-            dispatch({'type':"HEARTBEAT", heartBeat: message.data});
-            break;
-        case 'MESSAGE':
-          console.log('message arived', message);
-            dispatch({'type':"MESSAGE", message: message.data});
-            break;
-      }
-    };
+          case 'PONG':
+              //dispatch({'type': 'NEW_SESSION',id: message.data.id});
+              ping.setEnd(ping);
+              ping.start(connection, ping);
+              break;
+          case 'SESSION_ID':
+              dispatch({'type': 'NEW_SESSION',id: message.data.id});
+              break;
+          case 'CURRENT_SESSION':
+              dispatch({'type': 'CURRENT_SESSION',session: message.data.session});
+              localStorage.setItem('session', JSON.stringify(message.data.session));
+              break;
+          case 'INVITE':
+            console.log('an invite is recieved', message);
+              dispatch({'type':"INVITE", 'from': message.data.from ,'sessionId': message.data.sessionId});
+              break;
+          case 'VIDEO_PLAY':
+            console.log('video', message);
+              dispatch({'type':"VIDEO_PLAY", time: message.data.time});
+              break;
+          case 'VIDEO_PAUSE':
+            console.log('video', message);
+              dispatch({'type':"VIDEO_PAUSE", time: message.data.time});
+              break;
+          case 'VIDEO_POSITION':
+            console.log('videoposition', message);
+              dispatch({'type':"VIDEO_POSITION", time: message.data.time});
+              break;
+          case 'VIDEO_CHANGE':
+            console.log('videoChange', message);
+              dispatch({'type':"VIDEO_CHANGE", src: message.data.src});
+              break;
+          case 'HEARTBEAT':
+            console.log('heartbeat arived', message);
+              dispatch({'type':"HEARTBEAT", heartBeat: message.data});
+              break;
+          case 'MESSAGE':
+            console.log('message arived', message);
+              dispatch({'type':"MESSAGE", message: message.data});
+              break;
+        }
+      };
+    }
   };
 }
