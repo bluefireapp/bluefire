@@ -56,10 +56,12 @@ class bluefireEngine{
           case 'NEW_SESSION':
             ws.sessionId = this.createSession(data.video);
 
-            this.sendToUser(ws.user, "SESSION_ID", {'id': ws.sessionId, video: data.video});
+            this.addUserToSession(ws.user, ws.sessionId,ws);
             data.users.forEach((user)=>{
               this.sendToUser(user, "INVITE", {'from': ws.user, 'sessionId': ws.sessionId, video:data.video});
             })
+            this.currentUsersInSession(ws, ws.sessionId);
+            this.currentSession(ws, ws.sessionId);
             break;
           case 'INVITE':
             console.log("invites sending", data, ws.sessionId);

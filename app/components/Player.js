@@ -11,7 +11,8 @@ export default class Player extends Component {
     this.updateDimensions = this.updateDimensions.bind(this)
     this.setVolume = this.setVolume.bind(this);
     this.changePosition = this.changePosition.bind(this);
-
+    this.lastWidth= 0;
+    this.lastHeight =0;
   }
   updateDimensions () {
       let width = window.innerWidth ||
@@ -20,6 +21,8 @@ export default class Player extends Component {
       let height = window.innerHeight ||
           document.documentElement.clientHeight ||
           document.body.clientHeight;
+      this.lastHeight = height;
+      this.lastWidth = width;
       this.setState({width: width, height: height});
   }
   componentWillMount () {
@@ -39,20 +42,31 @@ export default class Player extends Component {
       }, false);
       player.addEventListener('progress', (e) =>{
         this.videoProgress(e);
+        console.log(e)
+      });
+      player.addEventListener('canplay', (e) =>{
+        console.log('canPlay')
+        //debugger;
+      });
+      player.addEventListener('waiting', (e) =>{
+        console.log('waiting...')
+        //debugger;
       });
   }
-  componentDidUpdate () {
-    let { src, videoPlaying, videoState, time } = this.props;
-    if (videoPlaying == true){
-      this.playerControls().play();
-    }else{
-      this.playerControls().pause();
-    }
-    if (time){
-      this.playerControls().setTime(time);
+  componentDidUpdate (e, arg) {
+    console.log("updated from", arg)
+    if (this.lastWidth == arg.width && this.lastHeight == arg.height){
+      let { src, videoPlaying, videoState, time } = this.props;
+      if (videoPlaying == true){
+        this.playerControls().play();
+      }else{
+        this.playerControls().pause();
+      }
+      if (time){
+        this.playerControls().setTime(time);
 
+      }
     }
-
   }
   componentWillUnmount () {
       window.removeEventListener("resize", this.updateDimensions);
@@ -98,7 +112,6 @@ export default class Player extends Component {
     var loadEndPercentage = bf.end(range) / e.target.duration;
     var loadPercentage = loadEndPercentage - loadStartPercentage;
     this.videoLoadedPerc = loadEndPercentage;
-    console.log("======buffered", loadEndPercentage);
     this.props.heartBeat({"time": e.target.currentTime, "loaded": this.videoLoadedPerc});
 
   }
@@ -132,14 +145,12 @@ export default class Player extends Component {
     let ballPerc = (timeTrack.value / duration) * 100;
     let percToPixels = (ballPerc * trackWidth) / 100;
     document.querySelector(".timeTrackGlow").style.width = percToPixels + 'px';
-    console.log(percToPixels, trackWidth, duration)
   }
   videoTimeUpdating(e) {
     document.querySelector(".timeTrack").value = e.target.currentTime;
     document.querySelector(".metaTime > p > b").innerHTML = this.props.cleanTime(e.target.currentTime);
     document.querySelector(".metaTime > p > span").innerHTML = this.props.cleanTime(e.target.duration);
     this.props.heartBeat({"time": e.target.currentTime, "loaded": this.videoLoadedPerc});
-    this.adjustGlow(e.target.duration);
   }
 
   block(e){
@@ -152,7 +163,6 @@ export default class Player extends Component {
   }
   render() {
     let { src, videoPlaying, videoState, time } = this.props;
-    console.log(time)
     return (
       <div>
         <video className='mainVideo' volume='50' style={{height: this.state.height, width: this.state.width}} src={src} id='mainMedia'>  </video>

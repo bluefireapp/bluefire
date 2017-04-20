@@ -1,6 +1,6 @@
 class bluefireEngine{
   constructor(){
-    var connection = new WebSocket('ws://localhost:8003');
+    var connection = new WebSocket('ws://thorium.online:8003');
     // When the connection is open, send some data to the server
     connection.onopen = function () {
       connection.send('Ping'); // Send the message 'Ping' to the server

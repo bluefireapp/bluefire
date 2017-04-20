@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import PlayerComponent from '../components/Player';
 import InviteUserComponent from '../components/InviteUsers';
 import {sendInvite, requestSessionId, videoState, heartBeat, cleanTime} from '../actions/counter';
+let app = require('video-server');
 
 class MediaContainer extends Component{
 	constructor(props) {
@@ -17,6 +18,7 @@ class MediaContainer extends Component{
 		this.chooseVideo = this.chooseVideo.bind(this);
 		this.changeVideoPop= this.changeVideoPop.bind(this);
 		this.setNewVideo= this.setNewVideo.bind(this);
+		this.startVideoServer= this.startVideoServer.bind(this);
 	}
 
   steps(step){
@@ -26,6 +28,28 @@ class MediaContainer extends Component{
 	chooseVideo(e){
 		let value = e.target.value;
 		this.setState({chosenVideo: value});
+	}
+
+	startVideoServer(sendInvites){
+		const {dialog} = require('electron').remote
+		const publicIp = require('public-ip');
+		let file = dialog.showOpenDialog({properties: ['openFile']})[0];
+		let directory =  require('path').dirname(file);
+		let fileName =  require('path').basename(file);
+		app.set('STORAGE_DIR', directory)
+		publicIp.v4().then(ip => {
+			this.setState({chosenVideo: "http://"+ip + ":8005/stream/"+fileName});
+			this.forceUpdate();
+			app.listen(8005);
+			console.log(ip);			
+			if (sendInvites){
+				this.sendInviteToUsers([...this.props.users], this.state.chosenVideo)
+			}else{
+				this.setNewVideo();
+			}
+			
+		//=> '46.5.21.123' 
+		});
 	}
 	sendInviteToUsers(copiedUsers, vid){
 		let selected = copiedUsers.filter((item)=>{
@@ -59,12 +83,26 @@ class MediaContainer extends Component{
 			<div className='wrapNode'>
         <div className='media'>
 						<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop} heartBeat = {this.props.heartBeat} session = {session} time ={time} videoState = {this.props.videoState} videoPlaying = {this.props.videoPlaying} autoplay = "true" src={session ? session.video.url : null}></PlayerComponent>
-
+						<div className='userVideoStatus'>
+							<h1>Hold up!</h1>
+							<h3>There are some users who are left behind</h3>
+							<div className='waitingList'>
+								<ul>
+									<li><i className='fa fa-spinner fa-spin fa-3x fa-fw'></i>Jose</li>
+									<li><i className='fa fa-spinner fa-spin fa-3x fa-fw'></i>KlsYouri</li>
+								</ul>
+							</div>
+							<div className='footer'>
+								<button>Screw them!</button>
+							</div>
+						</div>
 						{this.state.changeVideoPopUp ?
 						<div className='popContainer'>
 							<div className='inviteUsers'>
 								<p>Change video source</p>
-								<input onChange={this.chooseVideo} placeholder="Type the video URL..."></input>
+								<input onChange={this.chooseVideo} id='chosenVid' placeholder="Video URL or browse locally"></input>
+								<br></br>
+								<button onClick={()=> this.startVideoServer()}>Browse</button>
 								<div className='foot'>
 									<button onClick={()=> this.changeVideoPop(false)}>Cancel</button>
 									<button onClick={()=> this.setNewVideo()}>Change</button>
@@ -90,6 +128,7 @@ class MediaContainer extends Component{
             <div className='inviteUsers'>
               <p>Invite users to your session</p>
               <input onChange={this.chooseVideo} placeholder="Type the video URL..."></input>
+							<button onClick={()=> this.startVideoServer(true)}>Browse</button>
               <div className='foot'>
                 <button onClick={()=> this.steps(2)}>Back</button>
                 <button onClick={()=> this.sendInviteToUsers(copiedUsers, this.state.chosenVideo)}>Next</button>

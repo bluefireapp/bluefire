@@ -178,6 +178,7 @@
     "gulp-livereload": "^3.8.1",
     "gulp-plumber": "^1.1.0",
     "gulp-watch": "^4.3.11",
+    "public-ip": "^2.3.3",
     "random-flat-colors": "^1.0.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
@@ -186,7 +187,8 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "source-map-support": "^0.4.10"
+    "source-map-support": "^0.4.10",
+    "video-server": "^0.2.0"
   },
   "devEngines": {
     "node": ">=6.x",
