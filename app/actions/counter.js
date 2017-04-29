@@ -83,6 +83,13 @@ export function videoState(state) {
       case 'position':
         connection.send(JSON.stringify({topic:'VIDEO_POSITION', time: state.time}));
         break;
+      case 'buffering':
+        connection.send(JSON.stringify({topic:'BUFFERING', time: state.time}));
+        break;
+      case 'canplay':
+        console.log('canplay sent')
+        connection.send(JSON.stringify({topic:'CANPLAY', time: state.time}));
+        break;
 
     }
   };
@@ -156,10 +163,15 @@ export function bluefireEngine(currentUser) {
               dispatch({'type': 'NEW_SESSION',id: message.data.id});
               break;
           case 'CURRENT_SESSION':
-              dispatch({'type': 'CURRENT_SESSION',session: message.data.session});
-              localStorage.setItem('session', JSON.stringify(message.data.session));
-              dispatch({"type": "JOINED_SESSION"});
-              dispatch({'type': 'NEW_SESSION',id: message.data.session.id});
+              if (message.data && message.data.session && message.data.session.id){
+                dispatch({'type': 'CURRENT_SESSION',session: message.data.session});
+                localStorage.setItem('session', JSON.stringify(message.data.session));
+                dispatch({"type": "JOINED_SESSION"});
+                dispatch({'type': 'NEW_SESSION',id: message.data.session.id});
+              }else{
+                localStorage.removeItem('session');
+                 dispatch({'type': 'LEAVE_SESSION'});
+              }
 
               break;
           case 'INVITE':

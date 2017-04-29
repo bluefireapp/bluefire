@@ -1,22 +1,22 @@
-.Home__container___1sK25 {
+.Home__container___Z1-ob {
   position: absolute;
   top: 30%;
   left: 10px;
   text-align: center;
 }
 
-.Home__container___1sK25 h2 {
+.Home__container___Z1-ob h2 {
   font-size: 5rem;
 }
 
-.Home__container___1sK25 a {
+.Home__container___Z1-ob a {
   font-size: 1.4rem;
 }
-.Counter__backButton___4lvfc {
+.Counter__backButton___gtwXL {
   position: absolute;
 }
 
-.Counter__counter___2BpKs {
+.Counter__counter___295LC {
   position: absolute;
   top: 30%;
   left: 45%;
@@ -25,14 +25,14 @@
   letter-spacing: -.025em;
 }
 
-.Counter__btnGroup___1f4Se {
+.Counter__btnGroup___2VsWx {
   position: relative;
   top: 500px;
   width: 480px;
   margin: 0 auto;
 }
 
-.Counter__btn___2T2tb {
+.Counter__btn___3NFl6 {
   font-size: 1.6rem;
   font-weight: bold;
   background-color: #fff;
@@ -45,7 +45,7 @@
   font-family: Arial, Helvetica, Helvetica Neue;
 }
 
-.Counter__btn___2T2tb:hover {
+.Counter__btn___3NFl6:hover {
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
 }

@@ -11,6 +11,7 @@ export default class Player extends Component {
     this.updateDimensions = this.updateDimensions.bind(this)
     this.setVolume = this.setVolume.bind(this);
     this.changePosition = this.changePosition.bind(this);
+    this.videoCanPlay = this.videoCanPlay.bind(this);
     this.lastWidth= 0;
     this.lastHeight =0;
   }
@@ -23,6 +24,8 @@ export default class Player extends Component {
           document.body.clientHeight;
       this.lastHeight = height;
       this.lastWidth = width;
+      this.lastPause;
+      this.lastTimeChange;
       this.setState({width: width, height: height});
   }
   componentWillMount () {
@@ -42,29 +45,32 @@ export default class Player extends Component {
       }, false);
       player.addEventListener('progress', (e) =>{
         this.videoProgress(e);
-        console.log(e)
       });
       player.addEventListener('canplay', (e) =>{
         console.log('canPlay')
         //debugger;
+        this.videoCanPlay(e);
       });
       player.addEventListener('waiting', (e) =>{
         console.log('waiting...')
         //debugger;
+        this.videoBuffering(e);
       });
   }
   componentDidUpdate (e, arg) {
     console.log("updated from", arg)
     if (this.lastWidth == arg.width && this.lastHeight == arg.height){
       let { src, videoPlaying, videoState, time } = this.props;
-      if (videoPlaying == true){
-        this.playerControls().play();
-      }else{
-        this.playerControls().pause();
-      }
-      if (time){
-        this.playerControls().setTime(time);
+      if (this.lastState !== videoPlaying || this.lastTimeChange !== time){
+        if (videoPlaying == true){
+          this.playerControls().play();
+        }else{
+          this.playerControls().pause();
+        }
+        if (time){
+          this.playerControls().setTime(time);
 
+        }
       }
     }
   }
@@ -77,9 +83,11 @@ export default class Player extends Component {
       return {
         play: ()=>{
           player.play();
+          this.lastState = true;
         },
         pause: ()=>{
           player.pause();
+          this.lastState = false ;
         },
         volume: (value) =>{
           player.volume = value;
@@ -89,6 +97,7 @@ export default class Player extends Component {
         },
         setTime: (value)=>{
           player.currentTime = value;
+          this.lastTimeChange = value;
 
         },
         fullscreen: () =>{
@@ -125,6 +134,12 @@ export default class Player extends Component {
   }
   pause() {
       this.props.videoState({type: 'pause',time: this.playerControls().getCurrentTime()});
+  }
+  videoCanPlay(){
+      this.props.videoState({type: 'buffering'});
+  }
+  videoBuffering(){
+      this.props.videoState({type: 'canplay'});
   }
   changePosition(e) {
       this.props.videoState({type: 'position', time: e.target.value});

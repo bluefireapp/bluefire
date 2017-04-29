@@ -770,14 +770,26 @@ input {
       -ms-flex-direction: column;
           flex-direction: column;
 }
+.sideBar .thumb {
+  position: absolute;
+  width: 30px;
+  content: '';
+  height: 30px;
+  background-color: red;
+  right: -30px;
+  top: 0px;
+}
+.sideBar .thumb:hover {
+  background-color: blue;
+}
 .sideBar.is-hiding {
   -webkit-transition: all 300ms ease-in;
   transition: all 300ms ease-in;
-  left: -300px;
+  left: -200px;
 }
 .sideBar h3 {
   color: #4488ff;
-  font-weight: 100;
+  font-weight: 500;
   font-size: 12px;
   padding: 8px;
   padding-bottom: 15px;
@@ -788,7 +800,7 @@ input {
 }
 .sideBar p.lobby {
   color: #4488ff;
-  font-weight: 100;
+  font-weight: 400;
   font-size: 12px;
   padding: 8px;
   padding-bottom: 15px;
@@ -825,7 +837,7 @@ input {
   display: inline-block;
   vertical-align: top;
   margin: 8px;
-  font-weight: 100;
+  font-weight: 400;
   font-size: 14px;
 }
 .sideBar ul li h6 {
@@ -833,7 +845,7 @@ input {
   margin: 0px;
   text-align: left;
   margin-left: 37px;
-  font-weight: 100;
+  font-weight: 400;
   color: #1d5982;
 }
 .sideBar ul li h6 p {
@@ -870,20 +882,15 @@ button {
   padding-left: 15px;
   padding-right: 15px;
   text-align: center;
-  text-decoration: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  cursor: pointer;
   user-select: none;
   padding-left: 25px;
   padding-right: 25px;
-  border: none;
   -webkit-transition: all 300ms ease;
   transition: all 300ms ease;
-  background-color: #4488ff;
   color: white;
   outline: none;
   width: 130px;
@@ -892,6 +899,16 @@ button {
   -webkit-opacity: 0.8;
   -moz-opacity: 0.8;
   opacity: 0.8;
+  padding: 15px;
+  width: 140px;
+  background-color: #4488ff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover {
+  background-color: #264BA7;
 }
 .media {
   width: auto;
@@ -917,26 +934,33 @@ button {
 }
 .inviteUsers {
   position: relative;
+  padding: 25px;
   box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.83);
+  background-color: rgba(0, 0, 0, 0.7);
   color: white;
+  overflow: hidden;
+  border: 1px solid rgba(136, 136, 136, 0.15);
   border-radius: 1px;
   background-clip: padding-box;
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  min-height: 300px;
   display: inline-block;
 }
 .inviteUsers p {
-  font-weight: 100;
-  border-bottom: 1px solid #3970d3;
+  font-weight: 400;
   padding: 0px;
-  font-size: 14px;
+  font-size: 22px;
   padding-bottom: 14px;
+  text-align: left;
+  margin: 0px;
+  margin-bottom: 20px;
+  font-weight: 300;
 }
 .inviteUsers .foot {
-  position: absolute;
+  position: relative;
   bottom: 0px;
   padding: 14px;
+  margin-top: 20px;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
@@ -945,14 +969,44 @@ button {
   margin-left: 2px;
   margin-right: 2px;
 }
+.inviteUsers .fa.fa-times-circle {
+  right: 0px;
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 6px;
+  margin-right: 20px;
+  top: 14px;
+  position: absolute;
+  cursor: pointer;
+}
+.inviteUsers h4 {
+  text-align: left;
+  margin: 0px;
+  font-weight: 300;
+}
+.inviteUsers .fa.fa-folder {
+  position: relative;
+  color: white;
+  top: 4px;
+  right: 16px;
+  -webkit-transition: all 300ms ease;
+  transition: all 300ms ease;
+}
+.inviteUsers .fa.fa-folder:hover {
+  color: #264BA7;
+}
 .inviteUsers input {
-  font-size: 16px;
+  margin-top: 10px;
+  font-size: 15px;
+  padding: 5px;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+  outline: 0;
+  border-bottom: 2px solid #4488FF;
+  background-color: rgba(255, 255, 255, 0);
   color: white;
   background: transparent;
   padding: 15px;
-  width: 80%;
+  width: 94%;
   outline: none;
   box-sizing: border-box;
 }
@@ -999,7 +1053,7 @@ button {
 }
 .chat h3 {
   color: #4488ff;
-  font-weight: 100;
+  font-weight: 400;
   font-size: 12px;
   padding: 8px;
   padding-bottom: 15px;
@@ -1034,7 +1088,7 @@ button {
 }
 .chat .chatBox .content .message p {
   margin: 0px;
-  font-weight: 100;
+  font-weight: 400;
   padding: 0px;
   font-size: 13px;
   width: 100%;
@@ -1078,7 +1132,7 @@ button {
   margin-top: 100px;
 }
 .invites article h3 {
-  font-weight: 100;
+  font-weight: 400;
   font-size: 14px;
 }
 .invites article button {
@@ -1092,6 +1146,44 @@ button {
   right: 0px;
   z-index: -1;
 }
+.userVideoStatus {
+  background-color: rgba(39, 39, 39, 0.89);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  text-align: center;
+}
+.userVideoStatus h1,
+.userVideoStatus h3,
+.userVideoStatus p,
+.userVideoStatus .waitingList {
+  width: 100%;
+  display: inline-block;
+  color: white;
+  margin: 0px;
+}
+.userVideoStatus h1 {
+  font-weight: 100;
+  margin-top: 50px;
+}
+.userVideoStatus h3 {
+  font-weight: 300;
+}
+.userVideoStatus .waitingList ul {
+  width: 200px;
+  display: inline-block;
+  text-align: left;
+  font-family: 'Lato', sans-serif;
+  list-style-type: none;
+}
+.userVideoStatus .waitingList ul li {
+  margin-top: 3px;
+}
+.userVideoStatus .waitingList ul i {
+  font-size: 20px;
+  margin-right: 5px;
+}
 .playerControls {
   position: fixed;
   width: 100%;
@@ -1099,7 +1191,7 @@ button {
   transition: all 300ms ease;
   position: absolute;
   bottom: 0px;
-  background-color: rgba(28, 31, 38, 0.76);
+  background-color: rgba(28, 31, 38, 0.16);
   height: 50px;
   z-index: 2147483647;
   box-sizing: border-box;
@@ -1120,8 +1212,9 @@ button {
   font-family: 'Lato', sans-serif;
   position: absolute;
   color: #4488ff;
-  font-weight: 300;
+  font-weight: 500;
   font-size: 9px;
+  left: 45px;
   bottom: 5px;
 }
 .playerControls .metaTime p {
@@ -1130,6 +1223,9 @@ button {
 }
 .playerControls .metaTime p b {
   color: rgba(255, 255, 255, 0.61);
+}
+.playerControls i {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.46);
 }
 .playerControls i.play,
 .playerControls i.pause {

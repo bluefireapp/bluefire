@@ -98,6 +98,14 @@ class bluefireEngine{
           case 'VIDEO_CHANGE':
             this.changeVideoInSession(ws.user.currentSession, data.src);
             break;
+          case 'BUFFERING':
+            this.setUserBufferInSession(ws.sessionId, ws);
+            this.currentUsersInSession(ws, ws.sessionId);
+            break;
+          case 'CANPLAY':
+            this.setUserCanPlayInSession(ws.sessionId, ws);
+            this.currentUsersInSession(ws, ws.sessionId);
+            break;
           case 'HEARTBEAT':
             ws.heartBeat = data;
             this.setUserHeartBeatInSession(ws.currentSession, ws);
@@ -160,6 +168,30 @@ class bluefireEngine{
       this.sessions[sessionId].users = this.sessions[sessionId].users.map(user =>{
         if (user.username == ws.user.username){
           user.heartBeat = ws.heartBeat;
+        }
+        return user;
+      });
+    }
+  }
+
+  setUserBufferInSession(sessionId, ws){
+    if (this.sessions[sessionId]){
+      this.sessions[sessionId].users = this.sessions[sessionId].users.map(user =>{
+        if (user.username == ws.user.username){
+          user.buffering = '0'
+
+        }
+        return user;
+      });
+    }
+  }
+
+  setUserCanPlayInSession(sessionId, ws){
+    if (this.sessions[sessionId]){
+      this.sessions[sessionId].users = this.sessions[sessionId].users.map(user =>{
+        if (user.username == ws.user.username){
+          user.buffering ='1'
+
         }
         return user;
       });

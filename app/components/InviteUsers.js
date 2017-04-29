@@ -29,13 +29,13 @@ export default class Player extends Component {
       <div>
         <div className='inviteUsers'>
           <p>Invite users to your session</p>
+          <i className='fa fa-times-circle' onClick={()=> cancel()}></i>
           <ul className='scrollBar'>
             {copiedUsers.map((user, i)=>{
               return <li onClick={()=>this.selectUser(user, copiedUsers)} key ={i}>{user.username} {user.selected ? <i className='fa fa-check'></i>: null}</li>
             })}
           </ul>
           <div className='foot'>
-            <button onClick={()=> cancel()}>Cancel</button>
             <button onClick={()=> done(this.state.copiedUsers)}>Next</button>
           </div>
         </div>

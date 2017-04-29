@@ -48,6 +48,9 @@ function sideBarReducer(state=initialState, action) {
         return {...state, session: null}
       }
       break;
+		case 'LEAVE_SESSION':
+      return {...state, session: null, currentSession: null}
+      break;
 		case 'NEW_SESSION':
       if (action.id){
         return { ...state, currentSession: action.id };
