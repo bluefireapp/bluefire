@@ -11,6 +11,11 @@ class SideBarContainer extends Component{
 		super(props);
 		this.randomList = {};
     this.tabOverride = false;
+    this.state ={
+      show:true
+    }
+    this.setState({show:true});
+    this.toggleSideBar = this.toggleSideBar.bind(this);
 	}
 
 	makeColor(user) {
@@ -24,22 +29,27 @@ class SideBarContainer extends Component{
 		}
 	}
 
+  toggleSideBar(){
+    console.log('click')
+    this.tabOverride = true;
+    if (this.state.show == true){
+      this.setState({show:false});
+    }else{
+
+      this.setState({show:true});
+    }
+    this.forceUpdate();
+  }
+
 	render() {
 		const { users, session , sessionUsers, videoPlaying} = this.props;
-    let hideSideBar = false;
-    if (!this.tabOverride){
-      if (videoPlaying){
-        hideSideBar = true;
-      }else{
-        hideSideBar = false;
-      }
+    let {show} = this.state;
 
-    }
 		console.log("sessionUsers", sessionUsers)
 		return (
 			<div className='wrapNode'>
-        <aside className={hideSideBar ? 'sideBar is-hiding' : 'sideBar'}>
-          <span className='thumb' onClick={()=> this.tabOverride = true}></span>
+        <aside className={show ? 'sideBar' : 'sideBar is-hiding'}>
+          <span className='thumb'><i className='icon-house' onClick={()=> this.toggleSideBar()}></i></span>
           <h3>{ sessionUsers ? 'Current Session': 'Current Online'}</h3>
 					{ sessionUsers ?
 					<ul className='scrollBar'>

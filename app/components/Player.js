@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-
+const ipcRenderer = require('electron').ipcRenderer;
 
 
 export default class Player extends Component {
@@ -26,7 +26,8 @@ export default class Player extends Component {
       this.lastWidth = width;
       this.lastPause;
       this.lastTimeChange;
-      this.setState({width: width, height: height});
+      this.idle = false;
+      this.setState({width: width, height: height, idle:false});
   }
   componentWillMount () {
       this.updateDimensions();
@@ -56,6 +57,36 @@ export default class Player extends Component {
         //debugger;
         this.videoBuffering(e);
       });
+
+
+      var idleInterval = setInterval(timerIncrement.bind(this), 1000); // 1 minute
+      let idleTime = 0;
+      //Zero the idle timer on mouse movement.
+      window.addEventListener("mousemove", ()=>{
+        idleTime = 0;
+        this.idle= false;
+        document.querySelector(".playerControls").className='playerControls';
+      });
+      window.addEventListener("keypress", (e)=>{
+        idleTime = 0;
+        this.idle= false;
+        document.querySelector(".playerControls").className='playerControls';
+        
+        if (e.target.localName !== "input"){
+          if (this.props.videoPlaying){
+            this.pause();
+          }else{
+            this.play();
+          }
+        }
+      });
+      function timerIncrement() {
+        idleTime = idleTime + 1;
+        if (idleTime > 3) { // 20 minutes
+          this.idle = true;
+          document.querySelector(".playerControls").className='playerControls hide';
+        }
+      }
   }
   componentDidUpdate (e, arg) {
     console.log("updated from", arg)
@@ -80,10 +111,16 @@ export default class Player extends Component {
 
   playerControls() {
       let player = document.querySelector(".mainVideo");
+
       return {
         play: ()=>{
-          player.play();
-          this.lastState = true;
+          try{
+            player.play();
+            this.lastState = true;
+
+          }catch(e){
+
+          }
         },
         pause: ()=>{
           player.pause();
@@ -101,10 +138,7 @@ export default class Player extends Component {
 
         },
         fullscreen: () =>{
-          var elem = player;
-          if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-          }
+          this.setFullScreen();
         }
       }
   }
@@ -175,6 +209,9 @@ export default class Player extends Component {
   setTrackBar() {
 
     return this.props.time ? this.props.time : 0;
+  }
+  setFullScreen(){
+   ipcRenderer.send('fullscreen', true)
   }
   render() {
     let { src, videoPlaying, videoState, time } = this.props;

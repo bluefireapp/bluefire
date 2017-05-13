@@ -62,6 +62,8 @@ class bluefireEngine{
             })
             this.currentUsersInSession(ws, ws.sessionId);
             this.currentSession(ws, ws.sessionId);
+            this.sendMessageToSession(ws.sessionId, `New Session created by ${ws.user.username}`, ws.user.username)
+
             break;
           case 'INVITE':
             console.log("invites sending", data, ws.sessionId);
@@ -114,7 +116,7 @@ class bluefireEngine{
             this.inviteUsersToSession(ws.currentSession, data.users, ws);
             break;
           case 'MESSAGE':
-            this.sendMessageToSession(ws.currentSession, data, ws);
+            this.sendMessageToSession(ws.currentSession, data, ws.user.username);
             break;
           case 'PING':
             ws.user.ping = data.lastPing
@@ -158,6 +160,7 @@ class bluefireEngine{
   sendToUsersInSession(sessionId, topic, data){
     this.wss.clients.forEach((client) => {
       if ( sessionId == client.currentSession && client.readyState == 1 ) {
+        console.log(data)
         client.send(JSON.stringify({topic: topic, data: data}));
       }
     });
@@ -231,10 +234,10 @@ class bluefireEngine{
     this.sendToUsersInSession(sessionId, 'VIDEO_CHANGE',{src: src});
 
   }
-  sendMessageToSession(sessionId, message, ws){
+  sendMessageToSession(sessionId, message, username){
     if (!this.sessions[sessionId]) return;
     let currentTime = new Date();
-    let newPacket = {message: message, timeStamp:currentTime.toISOString(), username: ws.user.username};
+    let newPacket = {message: message, timeStamp:currentTime.toISOString(), username: username};
     this.sessions[sessionId].messages.push(newPacket);
     this.sendToUsersInSession(sessionId, 'MESSAGE', newPacket);
 
@@ -265,7 +268,8 @@ class bluefireEngine{
     if (!this.sessions[sessionId]) return;
     users.forEach((user)=>{
       this.sendToUser(user, "INVITE", {'from': ws.user, 'sessionId': sessionId});
-    })
+    });
+    this.sendMessageToSession(sessionId, `${ws.user.username} invited ${JSON.stringify(users)} to session`, ws.user.username)
 
   }
 

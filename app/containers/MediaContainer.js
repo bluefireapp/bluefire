@@ -98,7 +98,9 @@ class MediaContainer extends Component{
 		return (
 			<div className='wrapNode'>
         <div className='media'>
-					<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop} heartBeat = {this.props.heartBeat} session = {session} time ={time} videoState = {this.props.videoState} videoPlaying = {this.props.videoPlaying} autoplay = "true" src={session ? session.video.url : null}></PlayerComponent>
+					{session ?
+						<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop} heartBeat = {this.props.heartBeat} session = {session} time ={time} videoState = {this.props.videoState} videoPlaying = {this.props.videoPlaying} autoplay = "true" src={session ? session.video.url : null}></PlayerComponent>
+					:null	}
 					 {bufferingUsers ? 
 					 	<div className='userVideoStatus'>
 							<h1>Hold up!</h1>

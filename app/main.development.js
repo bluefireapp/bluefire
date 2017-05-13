@@ -44,13 +44,22 @@ const installExtensions = async () => {
 
 app.on('ready', async () => {
   await installExtensions();
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    webPreferences: {
-   experimentalFeatures: true
- }
+    mainWindow = new BrowserWindow({
+      show: false,
+      width: 1024,
+      height: 728,
+      webPreferences: {
+    experimentalFeatures: true
+    }
+  });
+
+  const ipcMain = require('electron').ipcMain;
+  ipcMain.on('fullscreen', function(e){
+     if (mainWindow.isFullScreen()){
+        mainWindow.setFullScreen(false)
+     }else{
+        mainWindow.setFullScreen(true)
+     }
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

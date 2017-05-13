@@ -23,15 +23,13 @@ class HomePage extends Component {
     return (
       <div className='wrapNode'>
         <InviteContainer />
-        {JSON.stringify(this.props)}
-        {!this.props.sessionVideo? 
-        <div className='bgVid'>
+        {this.props.currentSession ? null
+       
+        :        <div className='bgVid'>
           <video autoPlay = 'true' loop = 'true' muted>
             <source src="dist/fire.mp4" type="video/mp4"></source>
             </video>
-          </div>
-        
-        :null}
+          </div>}
         {
         this.state.hasUser || this.props.connected ?
         <div>
@@ -49,7 +47,7 @@ class HomePage extends Component {
 function mapStateToProps(state) {
   return {
     connected: state.sideBarReducer.connected,
-    sessionVideo: state.sideBarReducer.sessionVideo,
+    currentSession: state.sideBarReducer.currentSession,
   };
 }
 
