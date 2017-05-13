@@ -101,20 +101,20 @@ class MediaContainer extends Component{
 					{session ?
 						<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop} heartBeat = {this.props.heartBeat} session = {session} time ={time} videoState = {this.props.videoState} videoPlaying = {this.props.videoPlaying} autoplay = "true" src={session ? session.video.url : null}></PlayerComponent>
 					:null	}
-					 {bufferingUsers ? 
+					 {bufferingUsers ?
 					 	<div className='userVideoStatus'>
-							<h1>Hold up!</h1>
-							<h3>There are some users who are left behind</h3>
+							<h1>Hold on</h1>
+							<h3>There are users still loading!</h3>
 							<div className='waitingList'>
 								<ul>
 									{bufferingUsers.map((user, i)=>{
-										return <li key={i}><i className='fa fa-spinner fa-spin fa-3x fa-fw'></i>{user.username}</li>
+										return <li key={i}><i className='fa fa-cog fa-spin fa-3x fa-fw'></i>{user.username}</li>
 									})
 									}
 								</ul>
 							</div>
 							<div className='footer'>
-								<button>Screw them!</button>
+							
 							</div>
 						</div>
 					 :null}

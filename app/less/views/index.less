@@ -505,28 +505,39 @@ button{
   top:0px;
   right:0px;
   z-index: -1;
+  .transition(all, 300ms,ease);
 }
 
 .userVideoStatus{
-  background-color:rgba(39, 39, 39, 0.89);
+ // background-color:rgba(28, 31, 38, 0.9);
   position: absolute;
   width:100%;
   height:100%;
   display: block;
+  padding-top:100px;
   text-align: center;
- 
+  
   h1, h3, p, .waitingList{
     width:100%;
     display: inline-block;
-    color:white;
+    color: rgba(255, 255, 255, 0.29);
     margin:0px;
+    li{
+      color:@bluefireBlue;
+    }
+    i{
+      color: rgba(255, 255, 255, 0.29);
+
+    }
   }
   h1{
     font-weight: 100;
     margin-top:50px;
+    font-size:50px;
+    
   }
   h3{
-    font-weight: 300;
+    font-weight: 100;
   }
   .waitingList{
     ul{

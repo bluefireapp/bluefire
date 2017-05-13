@@ -181,7 +181,8 @@ class bluefireEngine{
     if (this.sessions[sessionId]){
       this.sessions[sessionId].users = this.sessions[sessionId].users.map(user =>{
         if (user.username == ws.user.username){
-          user.buffering = '0'
+          user.buffering = '0';
+          ws.user.buffering = '0'
 
         }
         return user;
@@ -194,6 +195,7 @@ class bluefireEngine{
       this.sessions[sessionId].users = this.sessions[sessionId].users.map(user =>{
         if (user.username == ws.user.username){
           user.buffering ='1'
+          ws.user.buffering = '1'
 
         }
         return user;

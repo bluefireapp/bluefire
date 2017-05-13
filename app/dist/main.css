@@ -18,7 +18,7 @@
   transition: all @duration @ease;
 }
 */
-@import url(https://fonts.googleapis.com/css?family=Lato:400,300,500,600);
+@import url(https://fonts.googleapis.com/css?family=Lato:100,400,300,500,600);
 .backgroundImageCover {
   background-size: cover;
 }
@@ -1207,13 +1207,15 @@ button:hover {
   top: 0px;
   right: 0px;
   z-index: -1;
+  -webkit-transition: all 300ms ease;
+  transition: all 300ms ease;
 }
 .userVideoStatus {
-  background-color: rgba(39, 39, 39, 0.89);
   position: absolute;
   width: 100%;
   height: 100%;
   display: block;
+  padding-top: 100px;
   text-align: center;
 }
 .userVideoStatus h1,
@@ -1222,15 +1224,28 @@ button:hover {
 .userVideoStatus .waitingList {
   width: 100%;
   display: inline-block;
-  color: white;
+  color: rgba(255, 255, 255, 0.29);
   margin: 0px;
+}
+.userVideoStatus h1 li,
+.userVideoStatus h3 li,
+.userVideoStatus p li,
+.userVideoStatus .waitingList li {
+  color: #4488ff;
+}
+.userVideoStatus h1 i,
+.userVideoStatus h3 i,
+.userVideoStatus p i,
+.userVideoStatus .waitingList i {
+  color: rgba(255, 255, 255, 0.29);
 }
 .userVideoStatus h1 {
   font-weight: 100;
   margin-top: 50px;
+  font-size: 50px;
 }
 .userVideoStatus h3 {
-  font-weight: 300;
+  font-weight: 100;
 }
 .userVideoStatus .waitingList ul {
   width: 200px;
