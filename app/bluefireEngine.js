@@ -88,6 +88,9 @@ class bluefireEngine{
             this.currentSession(ws, data.data.sessionId);
             this.currentUsersInSession(ws, data.data.sessionId);
             break;
+          case 'CHECK_SESSION':
+            this.checkSession(ws, data.data.sessionId);
+            break;
           case 'VIDEO_PLAY':
             this.playVideoInSession(ws.user.currentSession, data.time);
             break;
@@ -99,6 +102,9 @@ class bluefireEngine{
             break;
           case 'VIDEO_CHANGE':
             this.changeVideoInSession(ws.user.currentSession, data.src);
+            break;
+          case 'VIDEO_SUBS':
+            this.changeVideoSubsInSession(ws.user.currentSession, data.src);
             break;
           case 'BUFFERING':
             this.setUserBufferInSession(ws.sessionId, ws);
@@ -144,6 +150,12 @@ class bluefireEngine{
 
   currentSession(ws, sessionId) {
     this.sendToUser(ws.user, 'CURRENT_SESSION', {session: this.sessions[sessionId]});
+  }
+
+  checkSession(ws, sessionId) {
+    if (this.sessions[sessionId]){
+      this.sendToUser(ws.user, 'CURRENT_SESSION', {session: this.sessions[sessionId]});
+    }
   }
 
   sendToUser(user, topic, data){
@@ -234,6 +246,12 @@ class bluefireEngine{
     this.sessions[sessionId].video.playing = true;
     this.sessions[sessionId].video.url = src;
     this.sendToUsersInSession(sessionId, 'VIDEO_CHANGE',{src: src});
+
+  }
+  changeVideoSubsInSession(sessionId, src){
+    if (!this.sessions[sessionId]) return;
+    this.sessions[sessionId].video.subs = src;
+    this.sendToUsersInSession(sessionId, 'VIDEO_SUBS',{src: src});
 
   }
   sendMessageToSession(sessionId, message, username){

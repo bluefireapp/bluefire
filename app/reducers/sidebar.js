@@ -68,6 +68,11 @@ function sideBarReducer(state=initialState, action) {
       sessionCopy2.video.url = action.src;
       return { ...state, session: sessionCopy2};
       break;
+		case 'VIDEO_SUBS':
+       let sessionCopy3 = {...state.session};
+      sessionCopy3.video.subs = action.src;
+      return { ...state, session: sessionCopy3};
+      break;
     case 'HEARTBEAT':
       let sessionCopy;
       return { ...state, sessionUsers: action.heartBeat };

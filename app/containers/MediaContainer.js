@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import PlayerComponent from '../components/Player';
 import InviteUserComponent from '../components/InviteUsers';
 import {sendInvite, requestSessionId, videoState, heartBeat, cleanTime} from '../actions/counter';
+
+const ipcRenderer = require('electron').ipcRenderer;
 let app = require('video-server');
 
 class MediaContainer extends Component{
@@ -19,6 +21,7 @@ class MediaContainer extends Component{
 		this.changeVideoPop= this.changeVideoPop.bind(this);
 		this.setNewVideo= this.setNewVideo.bind(this);
 		this.startVideoServer= this.startVideoServer.bind(this);
+
 	}
 
   steps(step){
@@ -33,24 +36,52 @@ class MediaContainer extends Component{
 	startVideoServer(sendInvites){
 		const {dialog} = require('electron').remote
 		const publicIp = require('public-ip');
+		
 		let file = dialog.showOpenDialog({properties: ['openFile']})[0];
 		let directory =  require('path').dirname(file);
 		let fileName =  require('path').basename(file);
 		app.set('STORAGE_DIR', directory)
+
 		publicIp.v4().then(ip => {
 			this.setState({chosenVideo: "http://"+ip + ":8005/stream/"+fileName});
 			this.forceUpdate();
-			app.listen(8005);
+			if (!app.get('listening')){
+				app.listen(8005, ()=>{
+					app.set('listening', true)
+				});
+
+			}
 			console.log(ip);		
-			setTimeout(()=>{
-				if (sendInvites){
-					this.sendInviteToUsers([...this.props.users], this.state.chosenVideo)
-				}else{
-					this.setNewVideo();
-				}
-			}, 2000)	
-			
+
+		ipcRenderer.send("make-subs", file);
+			ipcRenderer.on('subs-done', (event, arg) => {
+				console.log(arg) // prints "pong"
+				let subsSrc ="http://"+ip + ":8005/subs/" + fileName + '.subs.vtt';
+				this.checkSubsAvailability(subsSrc, ()=>{
+					if (sendInvites){
+						this.sendInviteToUsers([...this.props.users], this.state.chosenVideo)
+					}else{
+						this.setNewVideo();
+					}
+					this.props.videoState({type:'subs', src: "http://"+ip + ":8005/subs/" + fileName + '.subs.vtt'});
+				})
+
+			})
+				
 		//=> '46.5.21.123' 
+		});
+	}
+
+	checkSubsAvailability(url ,cb){
+		fetch(url, {
+			method: 'get'
+		}).then(function(response) {
+			cb();
+		}).catch(function(err) {
+		// Error :(
+			setTimeout(()=>{
+				this.checkSubsAvailability(url, cb);
+			}, 1000)
 		});
 	}
 	sendInviteToUsers(copiedUsers, vid){
@@ -99,8 +130,14 @@ class MediaContainer extends Component{
 			<div className='wrapNode'>
         <div className='media'>
 					{session ?
-						<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop} heartBeat = {this.props.heartBeat} session = {session} time ={time} videoState = {this.props.videoState} videoPlaying = {this.props.videoPlaying} autoplay = "true" src={session ? session.video.url : null}></PlayerComponent>
-					:null	}
+						<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop}
+						 heartBeat = {this.props.heartBeat} session = {session} 
+						 time ={time} videoState = {this.props.videoState} videoPlaying = {this.props.videoPlaying} 
+						 autoplay = "true" 
+						 src={session ? session.video.url : null}
+						 subs={session ? session.video.subs : null}>
+						 </PlayerComponent>
+					:null	}	
 					 {bufferingUsers ?
 					 	<div className='userVideoStatus'>
 							<h1>Hold on</h1>

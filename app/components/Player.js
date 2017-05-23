@@ -14,6 +14,7 @@ export default class Player extends Component {
     this.videoCanPlay = this.videoCanPlay.bind(this);
     this.lastWidth= 0;
     this.lastHeight =0;
+    this.currentSrc ="";
   }
   updateDimensions () {
       let width = window.innerWidth ||
@@ -28,37 +29,16 @@ export default class Player extends Component {
       this.lastTimeChange;
       this.idle = false;
       this.setState({width: width, height: height, idle:false});
+      this.playerControls().size(width, height)
   }
+
   componentWillMount () {
       this.updateDimensions();
   }
+
   componentDidMount () {
       window.addEventListener("resize", this.updateDimensions);
-      let player = document.querySelector(".mainVideo");
-      player.addEventListener('loadeddata', (e)=> {
-        this.videoLoaded(e);
-      }, false);
-      player.addEventListener('error', (e)=> {
-        console.log("error loading vid", e)
-      }, false);
-      player.addEventListener('timeupdate', (e)=> {
-        this.videoTimeUpdating(e);
-      }, false);
-      player.addEventListener('progress', (e) =>{
-        this.videoProgress(e);
-      });
-      player.addEventListener('canplay', (e) =>{
-        console.log('canPlay')
-        //debugger;
-        this.videoCanPlay(e);
-      });
-      player.addEventListener('waiting', (e) =>{
-        console.log('waiting...')
-        //debugger;
-        this.videoBuffering(e);
-      });
-
-
+      this.playerControls().initHandlers();
       var idleInterval = setInterval(timerIncrement.bind(this), 1000); // 1 minute
       let idleTime = 0;
       //Zero the idle timer on mouse movement.
@@ -104,6 +84,41 @@ export default class Player extends Component {
         }
       }
     }
+    let {src , subs} = this.props;
+     if (src !== this.currentSrc) {
+      this.currentSrc = src;
+      if (document.querySelector(".mainVideo")){
+        document.querySelector(".vidContainer").removeChild(document.querySelector(".mainVideo"));
+      }
+      let newVidElement =  document.createElement('video');
+      newVidElement.id = "mainMedia";
+      newVidElement.className = "mainVideo";
+      newVidElement.crossOrigin = "anonymous";
+      var sourceMP4 = document.createElement("source"); 
+      sourceMP4.type = "video/mp4";
+      sourceMP4.src = src;
+      
+      newVidElement.appendChild(sourceMP4);
+
+      document.querySelector(".vidContainer").appendChild(newVidElement);
+      this.playerControls().initHandlers();
+      this.playerControls().load(); 
+      this.playerControls().size(this.state.width, this.state.height)
+    }
+     if (subs !== this.currentSubs){
+      this.currentSubs = subs;
+      var sourceSubs = document.createElement("track"); 
+      if (document.querySelector(".mainVideo track")){
+        document.querySelector(".mainVideo").removeChild(document.querySelector(".mainVideo track"));
+      }
+      sourceSubs.src = subs;
+      sourceSubs.label = "English"
+      sourceSubs.srclang = "en"
+      sourceSubs.kind = "subtitles"
+      sourceSubs.default = true;
+      document.querySelector(".mainVideo").appendChild(sourceSubs);
+       this.playerControls().load(); 
+     }
   }
   componentWillUnmount () {
       window.removeEventListener("resize", this.updateDimensions);
@@ -111,8 +126,44 @@ export default class Player extends Component {
 
   playerControls() {
       let player = document.querySelector(".mainVideo");
-
       return {
+        size: (w, h)=>{
+          if (!player) return;
+          player.style.width = w +"px";
+          player.style.height = h +"px";
+        },
+        initHandlers: ()=>{
+          let player = document.querySelector(".mainVideo");
+          if (!player) return;
+          player.addEventListener('loadeddata', (e)=> {
+            this.videoLoaded(e);
+          }, false);
+          player.addEventListener('error', (e)=> {
+            console.log("error loading vid", e)
+          }, false);
+          player.addEventListener('timeupdate', (e)=> {
+            this.videoTimeUpdating(e);
+          }, false);
+          player.addEventListener('progress', (e) =>{
+            this.videoProgress(e);
+          });
+          player.addEventListener('canplay', (e) =>{
+            console.log('canPlay')
+            //debugger;
+            this.videoCanPlay(e);
+          });
+          player.addEventListener('canplaythrough', (e) =>{
+            console.log('canplaythrough')
+            //debugger;
+            this.videoCanPlay(e);
+          });
+          player.addEventListener('waiting', (e) =>{
+            console.log('waiting...')
+            //debugger;
+            this.videoBuffering(e);
+          });
+          
+        },
         play: ()=>{
           try{
             player.play();
@@ -123,8 +174,16 @@ export default class Player extends Component {
           }
         },
         pause: ()=>{
+                if (!player) return;
+
           player.pause();
           this.lastState = false ;
+        },
+        load: ()=>{
+          if (!player){
+            return;
+          }
+          player.load();
         },
         volume: (value) =>{
           player.volume = value;
@@ -214,23 +273,29 @@ export default class Player extends Component {
    ipcRenderer.send('fullscreen', true)
   }
   render() {
-    let { src, videoPlaying, videoState, time } = this.props;
+    let { src, videoPlaying, videoState, time, subs } = this.props;
+  
     return (
-      <div>
-        <video className='mainVideo' volume='50' style={{height: this.state.height, width: this.state.width}} src={src} id='mainMedia'>  </video>
-        <div className='playerControls'>
-          {videoPlaying ? <i className='fa fa-pause pause' onClick={()=>this.pause()}></i> : <i className='fa fa-play play' onClick={()=>this.play()}></i>}
-          <div className="timeTrackGlow"></div>
-          <input type='range' min = '0' max = {this.state.duration} defaultValue={this.state.time} onChange={(e)=>this.adjustGlow(e.target.value)} onMouseDown = {(e)=>this.block(e)} onMouseUp={(e)=>this.changePosition(e)} className='timeTrack'></input>
-          <input type='range' defaultValue='50' className='volTrack' onChange={this.setVolume}>
+      <div className='vidContainer'>
 
-          </input>
-          <i className='fa fa-chain newLink' onClick={()=>this.props.changeVideoPop(true)}></i>
-          <i className='fa fa-clone fullscreen' onClick={()=>this.playerControls().fullscreen()}></i>
-          <div className='metaTime'>
-            <p><b>00:00:00</b> / <span>00:20:99</span></p>
+        
+        {src ?
+          
+          <div className='playerControls'>
+            {videoPlaying ? <i className='fa fa-pause pause' onClick={()=>this.pause()}></i> : <i className='fa fa-play play' onClick={()=>this.play()}></i>}
+            <div className="timeTrackGlow"></div>
+            <input type='range' min = '0' max = {this.state.duration} defaultValue={this.state.time} onChange={(e)=>this.adjustGlow(e.target.value)} onMouseDown = {(e)=>this.block(e)} onMouseUp={(e)=>this.changePosition(e)} className='timeTrack'></input>
+            <input type='range' defaultValue='50' className='volTrack' onChange={this.setVolume}>
+
+            </input>
+            <i className='fa fa-chain newLink' onClick={()=>this.props.changeVideoPop(true)}></i>
+            <i className='fa fa-clone fullscreen' onClick={()=>this.playerControls().fullscreen()}></i>
+            <div className='metaTime'>
+              <p><b>00:00:00</b> / <span>00:00:00</span></p>
+            </div>
           </div>
-        </div>
+          :null
+        }
       </div>
     );
   }

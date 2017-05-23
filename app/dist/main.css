@@ -701,6 +701,10 @@ div,
 input {
   font-family: 'Lato', sans-serif;
 }
+video::-webkit-media-text-track-display {
+  -webkit-transform: translateY(-3em);
+  transform: translateY(-3em);
+}
 .bgVid {
   position: absolute;
   top: 50%;

@@ -52,7 +52,8 @@ app.on('ready', async () => {
     experimentalFeatures: true
     }
   });
-
+  const path = require('path');
+  var Ffmpeg = require('fluent-ffmpeg');
   const ipcMain = require('electron').ipcMain;
   ipcMain.on('fullscreen', function(e){
      if (mainWindow.isFullScreen()){
@@ -60,6 +61,19 @@ app.on('ready', async () => {
      }else{
         mainWindow.setFullScreen(true)
      }
+  });
+
+  ipcMain.on('make-subs', function(event, p){
+    var command = Ffmpeg(p)
+    .output(p+'.subs.vtt')
+    .on('end', function() {
+      console.log('Finished processing');
+    })
+    .on('progress', function(e) {
+      console.log('progress',e );
+    })
+    .run();
+    event.sender.send('subs-done', 'pong')
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

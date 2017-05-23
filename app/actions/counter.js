@@ -77,6 +77,9 @@ export function videoState(state) {
       case 'change':
         connection.send(JSON.stringify({topic:'VIDEO_CHANGE', src: state.src}));
         break;
+      case 'subs':
+        connection.send(JSON.stringify({topic:'VIDEO_SUBS', src: state.src}));
+        break;
       case 'pause':
         connection.send(JSON.stringify({topic:'VIDEO_PAUSE', time: state.time}));
         break;
@@ -193,6 +196,10 @@ export function bluefireEngine(currentUser) {
           case 'VIDEO_CHANGE':
             console.log('videoChange', message);
               dispatch({'type':"VIDEO_CHANGE", src: message.data.src});
+              break;
+          case 'VIDEO_SUBS':
+            console.log('videoSubs', message);
+              dispatch({'type':"VIDEO_SUBS", src: message.data.src});
               break;
           case 'HEARTBEAT':
             console.log('heartbeat arived', message);
