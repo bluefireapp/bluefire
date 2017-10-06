@@ -1,0 +1,5 @@
+FROM node:7-onbuild
+
+ENV NODE_VERSION 7.8.0
+
+EXPOSE 8003

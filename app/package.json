@@ -11,5 +11,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "binary-file": "^0.2.1",
+    "ffmpeg-static": "^2.0.0",
+    "request": "^2.81.0"
   }
 }

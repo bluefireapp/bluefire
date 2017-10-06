@@ -908,6 +908,50 @@ video::-webkit-media-text-track-display {
   margin: 1px;
   margin-left: 6px;
 }
+.subtitles {
+  position: fixed;
+  bottom: 50px;
+  left: 0px;
+  text-align: center;
+  width: 100%;
+}
+.subtitles .sub {
+  color: white;
+  display: inline-block;
+  max-width: 800px;
+  font-family: 'Lato', sans-serif !important;
+  color: white !important;
+  font-size: 32px !important;
+  font-weight: 300;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-shadow: 1px 1px 3px black;
+}
+.subtitles .sub h1,
+.subtitles .sub h2,
+.subtitles .sub h3,
+.subtitles .sub h4,
+.subtitles .sub h5,
+.subtitles .sub h6,
+.subtitles .sub p,
+.subtitles .sub a,
+.subtitles .sub div,
+.subtitles .sub input,
+.subtitles .sub font {
+  font-family: 'Lato', sans-serif !important;
+  color: white !important;
+  font-size: 32px !important;
+  font-weight: 300;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-shadow: 1px 1px 3px black;
+}
 button {
   padding: 10px;
   padding-left: 15px;

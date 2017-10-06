@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+
+  bluefire:
+    image: bluefire:latest
+    container_name: bluefire
+    #mem_limit: 128M
+    tty: true
+    restart: on-failure:10
+    ports:
+      - 8003:8003
+    expose:
+      - 8003
+    environment:
+      NODE_ENV:

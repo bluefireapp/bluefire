@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import PlayerComponent from '../components/Player';
 import InviteUserComponent from '../components/InviteUsers';
-import {sendInvite, requestSessionId, videoState, heartBeat, cleanTime} from '../actions/counter';
+import {sendInvite, requestSessionId, videoState, heartBeat, cleanTime, sendMessageToSession} from '../actions/counter';
+import Subtitles from '../components/Subtitles.js';
 
 const ipcRenderer = require('electron').ipcRenderer;
 let app = require('video-server');
@@ -41,29 +42,33 @@ class MediaContainer extends Component{
 		let directory =  require('path').dirname(file);
 		let fileName =  require('path').basename(file);
 		app.set('STORAGE_DIR', directory)
-
+		
 		publicIp.v4().then(ip => {
-			this.setState({chosenVideo: "http://"+ip + ":8005/stream/"+fileName});
+			let hashName = app.hashMap().add(fileName)
+			this.setState({chosenVideo: "http://"+ip + ":8005/stream/"+hashName});
+			this.props.sendMessageToSession(` - New video: ${fileName}`);
 			this.forceUpdate();
 			if (!app.get('listening')){
 				app.listen(8005, ()=>{
 					app.set('listening', true)
 				});
-
+				
 			}
 			console.log(ip);		
-
-		ipcRenderer.send("make-subs", file);
+			
+			ipcRenderer.send("make-subs", file);
 			ipcRenderer.on('subs-done', (event, arg) => {
+				let hashName = app.hashMap().add(fileName + '.subs.srt')
 				console.log(arg) // prints "pong"
-				let subsSrc ="http://"+ip + ":8005/subs/" + fileName + '.subs.vtt';
+				let subsSrc ="http://"+ip + ":8005/subs/" + hashName;
 				this.checkSubsAvailability(subsSrc, ()=>{
 					if (sendInvites){
 						this.sendInviteToUsers([...this.props.users], this.state.chosenVideo)
 					}else{
 						this.setNewVideo();
 					}
-					this.props.videoState({type:'subs', src: "http://"+ip + ":8005/subs/" + fileName + '.subs.vtt'});
+					this.props.videoState({type:'subs', src: "http://"+ip + ":8005/subs/" + hashName});
+					
 				})
 
 			})
@@ -84,6 +89,7 @@ class MediaContainer extends Component{
 			}, 1000)
 		});
 	}
+
 	sendInviteToUsers(copiedUsers, vid){
 		let selected = copiedUsers.filter((item)=>{
 			return item.selected;
@@ -129,6 +135,7 @@ class MediaContainer extends Component{
 		return (
 			<div className='wrapNode'>
         <div className='media'>
+		
 					{session ?
 						<PlayerComponent cleanTime={cleanTime} changeVideoPop= {this.changeVideoPop}
 						 heartBeat = {this.props.heartBeat} session = {session} 
@@ -166,6 +173,7 @@ class MediaContainer extends Component{
 								<div className='foot'>
 									<button onClick={()=> this.setNewVideo()}>Change</button>
 								</div>
+
 							</div>
 						</div>
 
@@ -189,9 +197,7 @@ class MediaContainer extends Component{
               <p>Invite users to your session</p>
 							<h4>URL:</h4>
               <input onChange={this.chooseVideo} placeholder="Type the video URL..."></input>
-							<i className='fa fa-folder' onClick={()=> this.startVideoServer(true)}></i>
-
-							
+							<i className='fa fa-folder' onClick={()=> this.startVideoServer(true)}></i>							
               <div className='foot'>
                 <button onClick={()=> this.steps(2)}>Back</button>
                 <button onClick={()=> this.sendInviteToUsers(copiedUsers, this.state.chosenVideo)}>Next</button>
@@ -221,5 +227,6 @@ export default connect(mapStateToProps, {
   sendInvite,
 	requestSessionId,
 	videoState,
+	sendMessageToSession,
 	heartBeat
 })(MediaContainer);

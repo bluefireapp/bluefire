@@ -49,7 +49,7 @@ function sideBarReducer(state=initialState, action) {
       }
       break;
 		case 'LEAVE_SESSION':
-      return {...state, session: null, currentSession: null}
+      return {...state, session: null, currentSession: '', sessionUsers: null, messages: [], time:0}
       break;
 		case 'NEW_SESSION':
       if (action.id){

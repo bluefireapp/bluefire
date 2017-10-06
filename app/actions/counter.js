@@ -123,7 +123,7 @@ export function bluefireEngine(currentUser) {
   return (dispatch: () => void, getState: () => counterStateType) => {
     newConnection();
     function newConnection(){
-      connection = new WebSocket('ws://localhost:8003');
+      connection = new WebSocket('ws://fire.duelarcade.com:8003');
         // When the connection is open, send some data to the server
       connection.onopen = function () {
         ping.clear(ping);
@@ -173,13 +173,17 @@ export function bluefireEngine(currentUser) {
                 dispatch({'type': 'NEW_SESSION',id: message.data.session.id});
               }else{
                 localStorage.removeItem('session');
-                 dispatch({'type': 'LEAVE_SESSION'});
+                dispatch({'type': 'LEAVE_SESSION'});
               }
 
               break;
           case 'INVITE':
             console.log('an invite is recieved', message);
               dispatch({'type':"INVITE", 'from': message.data.from ,'sessionId': message.data.sessionId});
+              break;
+          case 'NO_SESSION':
+              localStorage.removeItem('session');
+              dispatch({'type': 'LEAVE_SESSION'});
               break;
           case 'VIDEO_PLAY':
             console.log('video', message);

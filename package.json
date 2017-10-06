@@ -17,6 +17,7 @@
     "build": "npm run build-main && npm run build-renderer",
     "start": "node node_modules/cross-env/bin/cross-env.js NODE_ENV=production electron ./app/",
     "flow": "flow",
+    "gulp": "node node_modules/gulp/bin/gulp.js",
     "flow-typed": "flow-typed install",
     "start-hot": "node node_modules/cross-env/bin/cross-env.js HOT=1 NODE_ENV=development electron -r babel-register -r babel-polyfill ./app/main.development",
     "postinstall": "concurrently \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
@@ -35,6 +36,12 @@
     "productName": "Bluefire",
     "appId": "org.develar.ElectronReact",
     "category": "public.app-category.tools",
+    "extraResources": [
+      {
+        "from": "lib/ffmpeg.exe",
+        "to": "lib/ffmpeg.exe"
+      }
+    ],
     "dmg": {
       "contents": [
         {
@@ -145,7 +152,7 @@
     "eslint-plugin-mocha": "^4.8.0",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-react": "^6.9.0",
-    "express": "^4.14.0",
+    "express": "^4.15.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "fbjs-scripts": "^0.7.1",
     "file-loader": "^0.10.0",
@@ -170,7 +177,10 @@
     "webpack-validator": "^2.3.0"
   },
   "dependencies": {
+    "binary-file": "^0.2.1",
+    "cors": "^2.8.4",
     "electron-debug": "^1.1.0",
+    "ffmpeg-static": "^2.0.0",
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -188,7 +198,11 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "request": "^2.81.0",
+    "rtmp-server": "^0.2.0",
     "source-map-support": "^0.4.10",
+    "subtitles-parser": "0.0.2",
+    "uuid": "^3.1.0",
     "video-server": "^0.2.0"
   },
   "devEngines": {

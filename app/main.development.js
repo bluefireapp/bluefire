@@ -53,7 +53,7 @@ app.on('ready', async () => {
     }
   });
   const path = require('path');
-  var Ffmpeg = require('fluent-ffmpeg');
+  let exec = require('child_process').execFile;
   const ipcMain = require('electron').ipcMain;
   ipcMain.on('fullscreen', function(e){
      if (mainWindow.isFullScreen()){
@@ -64,16 +64,9 @@ app.on('ready', async () => {
   });
 
   ipcMain.on('make-subs', function(event, p){
-    var command = Ffmpeg(p)
-    .output(p+'.subs.vtt')
-    .on('end', function() {
-      console.log('Finished processing');
-    })
-    .on('progress', function(e) {
-      console.log('progress',e );
-    })
-    .run();
-    event.sender.send('subs-done', 'pong')
+    exec(`lib/ffmpeg.exe`, ['-i', p, p + '.subs.srt'], (err, data) => {
+      event.sender.send('subs-done', 'pong')
+    });  
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

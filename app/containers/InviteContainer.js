@@ -66,13 +66,15 @@ class InviteContainer extends Component{
 			:null}
 			{
 			this.state.hasUser == false ?
-			<article>
-				<h3>Pick a name</h3>
-				<input type='text' placeholder="type..." onKeyUp={this.setUsername}></input>
-				<br></br>
-				<button onClick={()=> this.userLogin()}>Join</button>
-			</article>
-		:null}
+				<div className='inviteUsers'>
+					<h3>Pick a name</h3>
+					<input type='text' placeholder="type..." onKeyUp={this.setUsername}></input>
+					<br></br>
+					<br></br>
+					<button onClick={()=> this.userLogin()}>Join</button>
+				</div>
+
+			:null}
 		</div>
 
 		);

@@ -12,42 +12,5 @@
 .Home__container___Z1-ob a {
   font-size: 1.4rem;
 }
-.Counter__backButton___gtwXL {
-  position: absolute;
-}
-
-.Counter__counter___295LC {
-  position: absolute;
-  top: 30%;
-  left: 45%;
-  font-size: 10rem;
-  font-weight: bold;
-  letter-spacing: -.025em;
-}
-
-.Counter__btnGroup___2VsWx {
-  position: relative;
-  top: 500px;
-  width: 480px;
-  margin: 0 auto;
-}
-
-.Counter__btn___3NFl6 {
-  font-size: 1.6rem;
-  font-weight: bold;
-  background-color: #fff;
-  border-radius: 50%;
-  margin: 10px;
-  width: 100px;
-  height: 100px;
-  opacity: .7;
-  cursor: pointer;
-  font-family: Arial, Helvetica, Helvetica Neue;
-}
-
-.Counter__btn___3NFl6:hover {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.5);
-}
 
 /*# sourceMappingURL=style.css.map*/

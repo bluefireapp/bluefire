@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 const ipcRenderer = require('electron').ipcRenderer;
-
+import Subtitles from './Subtitles.js';
 
 export default class Player extends Component {
   constructor(props){
@@ -70,6 +70,8 @@ export default class Player extends Component {
   }
   componentDidUpdate (e, arg) {
     console.log("updated from", arg)
+
+
     if (this.lastWidth == arg.width && this.lastHeight == arg.height){
       let { src, videoPlaying, videoState, time } = this.props;
       if (this.lastState !== videoPlaying || this.lastTimeChange !== time){
@@ -106,18 +108,19 @@ export default class Player extends Component {
       this.playerControls().size(this.state.width, this.state.height)
     }
      if (subs !== this.currentSubs){
-      this.currentSubs = subs;
-      var sourceSubs = document.createElement("track"); 
-      if (document.querySelector(".mainVideo track")){
-        document.querySelector(".mainVideo").removeChild(document.querySelector(".mainVideo track"));
-      }
-      sourceSubs.src = subs;
-      sourceSubs.label = "English"
-      sourceSubs.srclang = "en"
-      sourceSubs.kind = "subtitles"
-      sourceSubs.default = true;
-      document.querySelector(".mainVideo").appendChild(sourceSubs);
-       this.playerControls().load(); 
+      // this.currentSubs = subs;
+      // var sourceSubs = document.createElement("track"); 
+      // if (document.querySelector(".mainVideo track")){
+      //   document.querySelector(".mainVideo").removeChild(document.querySelector(".mainVideo track"));
+      // }
+      // sourceSubs.src = subs;
+      // sourceSubs.label = "English"
+      // sourceSubs.srclang = "en"
+      // sourceSubs.kind = "subtitles"
+      // sourceSubs.default = true;
+      // document.querySelector(".mainVideo").appendChild(sourceSubs);
+      // this.playerControls().load(); 
+      
      }
   }
   componentWillUnmount () {
@@ -126,6 +129,7 @@ export default class Player extends Component {
 
   playerControls() {
       let player = document.querySelector(".mainVideo");
+      this.mainPlayer = player;
       return {
         size: (w, h)=>{
           if (!player) return;
@@ -278,20 +282,22 @@ export default class Player extends Component {
     return (
       <div className='vidContainer'>
 
-        
         {src ?
+          <div>
+            <Subtitles subs ={this.props.subs} />
           
-          <div className='playerControls'>
-            {videoPlaying ? <i className='fa fa-pause pause' onClick={()=>this.pause()}></i> : <i className='fa fa-play play' onClick={()=>this.play()}></i>}
-            <div className="timeTrackGlow"></div>
-            <input type='range' min = '0' max = {this.state.duration} defaultValue={this.state.time} onChange={(e)=>this.adjustGlow(e.target.value)} onMouseDown = {(e)=>this.block(e)} onMouseUp={(e)=>this.changePosition(e)} className='timeTrack'></input>
-            <input type='range' defaultValue='50' className='volTrack' onChange={this.setVolume}>
+            <div className='playerControls'>
+              {videoPlaying ? <i className='fa fa-pause pause' onClick={()=>this.pause()}></i> : <i className='fa fa-play play' onClick={()=>this.play()}></i>}
+              <div className="timeTrackGlow"></div>
+              <input type='range' min = '0' max = {this.state.duration} defaultValue={this.state.time} onChange={(e)=>this.adjustGlow(e.target.value)} onMouseDown = {(e)=>this.block(e)} onMouseUp={(e)=>this.changePosition(e)} className='timeTrack'></input>
+              <input type='range' defaultValue='50' className='volTrack' onChange={this.setVolume}>
 
-            </input>
-            <i className='fa fa-chain newLink' onClick={()=>this.props.changeVideoPop(true)}></i>
-            <i className='fa fa-clone fullscreen' onClick={()=>this.playerControls().fullscreen()}></i>
-            <div className='metaTime'>
-              <p><b>00:00:00</b> / <span>00:00:00</span></p>
+              </input>
+              <i className='fa fa-chain newLink' onClick={()=>this.props.changeVideoPop(true)}></i>
+              <i className='fa fa-clone fullscreen' onClick={()=>this.playerControls().fullscreen()}></i>
+              <div className='metaTime'>
+                <p><b>00:00:00</b> / <span>00:00:00</span></p>
+              </div>
             </div>
           </div>
           :null
