@@ -37,6 +37,7 @@ app/node_modules
 release
 app/main.js
 app/main.js.map
+app/node_modules
 app/bundle.js
 app/bundle.js.map
 app/style.css
